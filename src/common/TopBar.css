@@ -1,0 +1,15 @@
+.top-bar {
+    padding: 0.7em 1.7em;
+
+    color: white;
+
+    display: flex;
+    flex-direction: row;
+    gap: 1.5em;
+}
+
+.top-bar > a {
+    color: var(--default-fore);
+    font-weight: 500;
+    text-decoration: none;
+}
