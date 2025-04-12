@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "./AuthContext.tsx";
+import { useAuth } from "./AuthContext.ts";
 
 import './TopBar.css'
 

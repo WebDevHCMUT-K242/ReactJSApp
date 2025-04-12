@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import { AuthProvider } from "./common/AuthContext.tsx";
+import { AuthProvider } from "./common/AuthProvider.tsx";
 
 import Home from "./pages/Home.tsx";
 import About from "./pages/About.tsx";
