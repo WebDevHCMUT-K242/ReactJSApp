@@ -5,10 +5,17 @@
 
     display: flex;
     flex-direction: row;
-    gap: 1.5em;
 }
 
-.top-bar > a {
+.top-bar-pages {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5em;
+
+    flex-grow: 1;
+}
+
+.top-bar-pages > a, .top-bar-user > a {
     color: var(--default-fore);
     font-weight: 500;
     text-decoration: none;

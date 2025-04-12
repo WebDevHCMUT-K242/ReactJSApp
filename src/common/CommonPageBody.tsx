@@ -1,6 +1,6 @@
 import {ReactNode} from "react";
 
-import './CommonPageBody.css'
+import "./CommonPageBody.css";
 
 type CommonPageBodyProps = {
   children: ReactNode;

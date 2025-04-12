@@ -1,21 +1,26 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Home from './pages/Home.tsx';
-import About from './pages/About.tsx';
+import { AuthProvider } from "./common/AuthContext.tsx";
+
+import Home from "./pages/Home.tsx";
+import About from "./pages/About.tsx";
+import Login from "./pages/Login.tsx";
+
 import TopBar from "./common/TopBar.tsx";
-
-import './App.css';
+import "./App.css";
 
 function App() {
   return (
-    <Router>
-      <TopBar></TopBar>
-
-      <Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="/about" element={<About/>}/>
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <TopBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
