@@ -6,7 +6,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const refreshUser = async () => {
     try {
-      const res = await fetch("/api/me", {
+      const res = await fetch("/api/user/me.php", {
         credentials: "include",
       });
 
@@ -25,7 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch("/api/user/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    await fetch("/api/logout", {
+    await fetch("/api/user/logout.php", {
       method: "POST",
       credentials: "include",
     });
@@ -59,7 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const refreshUserMeta = async () => {
     try {
-      const res = await fetch("/api/me", {
+      const res = await fetch("/api/user/me.php", {
         credentials: "include",
       });
 
