@@ -32,10 +32,10 @@ export class AuthState {
 }
 
 export interface AuthContextType extends AuthState {
-  refreshUser: () => Promise<void>;
-  login: (username: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
-  refreshUserMeta: () => Promise<void>;
+  refreshUser: () => Promise<string | null>;
+  login: (username: string, password: string) => Promise<string | null>;
+  logout: () => Promise<string | null>;
+  refreshUserMeta: () => Promise<string | null>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

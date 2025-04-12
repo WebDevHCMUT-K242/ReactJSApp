@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function Login() {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -12,11 +12,11 @@ function Login() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await login(username, password);
-    if (success) {
+    const errorString = await login(username, password);
+    if (errorString == null) {
       navigate("/");
     } else {
-      setError("Invalid username or password");
+      setError(errorString);
     }
   };
 
@@ -28,6 +28,8 @@ function Login() {
         <button type="submit">Login</button>
         {error && <p>{error}</p>}
       </form>
+      <button onClick={() => setError("")}>Clear error</button>
+      <button onClick={() => logout()}>Log out</button>
     </CommonPageBody>
   )
 }
