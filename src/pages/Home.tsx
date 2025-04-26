@@ -1,4 +1,5 @@
 
+import Footer from "../common/Footer";
 import "./Home.css";
 
 function Home() {
@@ -95,13 +96,7 @@ function Home() {
         
       </div>
 
-      <div style={{background: "black"}}>
-        
-      </div>
-
     </div>
-
-    
   )
 }
 
