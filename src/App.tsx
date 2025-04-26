@@ -7,7 +7,10 @@ import About from "./pages/About.tsx";
 import Login from "./pages/Login.tsx";
 
 import TopBar from "./common/TopBar.tsx";
+import Footer from "./common/Footer.tsx";
 import "./App.css";
+import Contact from "./pages/Contact.tsx";
+import Signup from "./pages/Signup.tsx";
 
 function App() {
   return (
@@ -17,8 +20,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
+        <Footer />
       </Router>
     </AuthProvider>
   );

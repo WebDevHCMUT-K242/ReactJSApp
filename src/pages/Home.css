@@ -1,0 +1,54 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+
+
+.main-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding-top: 5rem;
+    background: #2BA4C2;
+    /* border-top-left-radius: 5%; */
+}
+
+.myContainer {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+  }
+
+.myContainer.v2 {
+    width: 100%;
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+}
+
+.main-text {
+    display: flex;
+    font-size: 4rem;
+    color: black;
+    font-family: "pixelify sans";
+    max-width: 50rem;
+    justify-content: center;
+    text-align: center;
+}
+
+.sub-text {
+    color: black;
+    font-family: "pixelify sans" ;
+    /* text-align: center; */
+    font-size: 1.5rem;
+    align-self: flex-start; 
+    position: relative; 
+    top: +0.5rem;
+    max-width: 65rem;
+}
+
+.sub-text.v2 {
+    color: white;
+    font-size: 1.25rem;
+    max-width: 30rem;
+
+}
