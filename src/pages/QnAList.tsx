@@ -39,10 +39,10 @@ function QnAList() {
 
   return (
     <div className="p-4 space-y-4 bg-blue-900 text-white h-100">
-      <h1 className="text-2xl font-bold">Q&A Threads</h1>
+      <h1 className="text-2xl font-bold">Questions & answers</h1>
       {loading ? (<div></div>) : (
         threads.length === 0 ? (
-          <div>No threads available.</div>
+          <div>No threads yet. Maybe you'll be the first to make one?</div>
         ) : (
           <ul className="space-y-3">
             {threads.map((thread) => (
