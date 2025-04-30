@@ -12,10 +12,7 @@ import "./App.css";
 import Contact from "./pages/Contact.tsx";
 import Signup from "./pages/Signup.tsx";
 import QnAList from "./pages/QnAList.tsx";
-
-function QAThread() {
-  return null;
-}
+import QnAThread from "./pages/QnAThread.tsx";
 
 function App() {
   return (
@@ -30,7 +27,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
 
           <Route path="/qa" element={<QnAList />} />
-          <Route path="/qa/:threadId" element={<QAThread />} />
+          <Route path="/qa/:threadId" element={<QnAThread />} />
         </Routes>
         <Footer />
       </Router>

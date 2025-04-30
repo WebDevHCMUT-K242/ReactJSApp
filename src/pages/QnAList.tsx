@@ -1,5 +1,6 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import "./QnAList.css";
+import { Link } from "react-router-dom";
 
 import {Thread, Post} from "../common/qa/Interfaces.ts";
 import {User} from "../common/GeneralUserData.ts";
@@ -53,8 +54,13 @@ function QnAList() {
                 <div className="flex justify-between">
                   <div className="text-lg font-semibold">{thread.title}</div>
                   <span className={`text-sm ${thread.is_locked ? "text-red-500" : "text-green-500"}`}>
-                          {thread.is_locked ? "Locked" : "Open"}
-                        </span>
+                    <Link
+                      to={`/qa/${thread.id}`}
+                      className="text-sm text-green-400 underline hover:text-green-300"
+                    >
+                      Open
+                    </Link>
+                  </span>
                 </div>
                 <p className="text-sm text-gray-300">{thread.message}</p>
                 <div className="mt-2 text-xs text-gray-400">
