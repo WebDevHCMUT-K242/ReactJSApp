@@ -1,4 +1,4 @@
-import {User} from "../GeneralUserData.ts";
+import { User } from "../GeneralUserData.ts";
 
 export interface Thread {
   id: number;
