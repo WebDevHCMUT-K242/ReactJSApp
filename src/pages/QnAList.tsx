@@ -34,14 +34,12 @@ function QnAList() {
     fetchThreads();
   }, []);
 
-  if (error) {
-    return <div className="text-center text-red-500 py-4">{error}</div>;
-  }
-
   return (
     <div className="p-4 space-y-4 bg-blue-900 text-white h-100">
       <h1 className="text-2xl font-bold">Questions & answers</h1>
-      {loading ? (<div></div>) : (
+      {loading ? (<div>Loading threads...</div>) : error ? (
+        <div>Couldn't fetch threads; encountered error.</div>
+      ) : (
         threads.length === 0 ? (
           <div>No threads yet. Maybe you'll be the first to make one?</div>
         ) : (
