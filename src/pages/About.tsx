@@ -1,12 +1,27 @@
 import { useAuth } from "../common/AuthContext.ts";
 import { useEffect, useState } from "react";
+import TitleEdit from "./about_editing/TitleEdit.tsx";
+
+interface Element {
+  id: number;
+  type: string;
+  text: string;
+}
+
+interface Data {
+  title: string;
+  contents: Element[];
+  last_updated: number;
+}
 
 function About() {
   const { userCore, userMeta, logout, loading: userAuthLoading } = useAuth();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [data, setData] = useState({ title: '', contents: [], last_updated: 0 });
+  const [data, setData] = useState<Data>({ title: '', contents: [], last_updated: 0 });
   const [loading, setLoading] = useState(true);
+
+  const [editedElement, setEditedElement] = useState<"title" | number | null>(null);
 
   const isAdmin = !userAuthLoading && (userCore?.is_admin || false);
 
@@ -21,7 +36,7 @@ function About() {
       });
   }, []);
 
-  const setTitle = (newTitle) => {
+  const setTitle = (newTitle: string) => {
     fetch('/api/editable_about/set_title.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,7 +50,7 @@ function About() {
       });
   };
 
-  const insertElement = (type, text, index) => {
+  const insertElement = (type: string, text: string, index: number) => {
     fetch('/api/editable_about/insert_element.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -47,7 +62,7 @@ function About() {
       });
   };
 
-  const removeElement = (id) => {
+  const removeElement = (id: number) => {
     fetch('/api/editable_about/remove_element.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -59,51 +74,44 @@ function About() {
       });
   };
 
-  const updateElement = (id, type, text, index) => {
+  const updateElement = (id: number, type: string, text: string, index: number) => {
     fetch('/api/editable_about/update_element.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, type, text, index })
     })
-      .then(res => res.text())
+      .then(res => res.json())
       .then(json => {
-        console.log(json)
-        json = JSON.parse(json)
         if (json.success) setData(json.data);
       });
   };
 
   return (
     <div className="flex flex-col flex-1 py-4 space-y-2 bg-blue-900 text-white">
-      <h1 className="px-6 mb-4 text-3xl font-medium">
-        {isEditing ? (
-          <input
-            className="bg-blue-700 text-white px-2 py-1"
-            value={data.title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        ) : data.title}
-      </h1>
-
-      {isAdmin && (
+      {editedElement === "title" ? (
+        <TitleEdit originalTitle={data.title} onSaveTitle={(t: string) => {
+          setTitle(t);
+          setEditedElement(null);
+        }} />
+      ) : (
         isEditing ? (
-          <button
-            onClick={() => setIsEditing(false)}
-            className="self-start pl-6 pr-4 py-1 flex-0 text-left text-sm bg-orange-700 hover:bg-orange-600 border-b border-gray-800"
-          >
-            Admin: Stop editing page
-          </button>
+          <h1 className="flex flex-row gap-3 items-center mb-4 text-3xl font-medium">
+            <button
+              onClick={() => setEditedElement("title")}
+              className="text-sm pl-6 pr-4 py-1 text-left bg-blue-700 text-white hover:bg-blue-600 disabled:bg-blue-950 disabled:text-gray-400 border-b-1 border-b-gray-800"
+            >
+              Edit title
+            </button>
+            {data.title}
+          </h1>
         ) : (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="self-start pl-6 pr-4 py-1 flex-0 text-left text-sm bg-orange-700 hover:bg-orange-600 border-b border-gray-800"
-          >
-            Admin: Start editing page
-          </button>
+          <h1 className="flex flex-row gap-2 items-center mb-4 px-6 text-3xl font-medium">
+            {data.title}
+          </h1>
         )
       )}
 
-      <div className="px-6 space-y-4">
+      <div className="space-y-4">
         {data.contents.map((el, i) => (
           <div key={el.id} className="space-y-1">
             {isEditing ? (
@@ -137,12 +145,34 @@ function About() {
         {isEditing && (
           <button
             onClick={() => insertElement('p', 'New text', data.contents.length)}
-            className="mt-4 bg-green-600 hover:bg-green-500 px-4 py-2"
+            className="mt-2 text-sm pl-6 pr-4 py-1 text-left bg-blue-700 text-white hover:bg-blue-600 disabled:bg-blue-950 disabled:text-gray-400 border-b-1 border-b-gray-800"
+            disabled={editedElement !== null}
           >
-            Add new element
+            Add element
           </button>
         )}
       </div>
+
+      {isAdmin && (
+        isEditing ? (
+          <button
+            onClick={() => {
+              setEditedElement(null);
+              setIsEditing(false);
+            }}
+            className="self-start pl-6 pr-4 py-1 flex-0 text-left text-sm bg-orange-700 hover:bg-orange-600 border-b border-gray-800"
+          >
+            Admin: Stop editing page <span className="font-medium">(discards unsaved changes!)</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="self-start pl-6 pr-4 py-1 flex-0 text-left text-sm bg-orange-700 hover:bg-orange-600 border-b border-gray-800"
+          >
+            Admin: Start editing page
+          </button>
+        )
+      )}
     </div>
   );
 }
