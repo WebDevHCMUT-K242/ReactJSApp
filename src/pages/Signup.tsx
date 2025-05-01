@@ -1,14 +1,40 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Signup.css";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Username: ${username}\nDisplay Name: ${displayName}\nPassword: ${password}`);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/user/register.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          display_name: displayName,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        navigate(-1); // Go back to the previous page
+      } else {
+        setError(data.error || "Registration failed.");
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError("An unexpected error occurred.");
+    }
   };
 
   return (
@@ -67,6 +93,11 @@ export default function Signup() {
               required
             />
           </div>
+          {error && (
+            <div className="text-red-400 text-sm">
+              {error}
+            </div>
+          )}
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md font-medium transition-colors"

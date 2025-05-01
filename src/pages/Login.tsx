@@ -13,7 +13,7 @@ function Login() {
     e.preventDefault();
     const errorString = await login(username, password);
     if (errorString == null) {
-      navigate("/");
+      navigate(-1); // Go back to the previous page
     } else {
       setError(errorString);
     }
