@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import "./QnAList.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import {Thread, Post} from "../common/qa/Interfaces.ts";
-import {User} from "../common/GeneralUserData.ts";
+import { Thread, Post } from "../common/qa/Interfaces.ts";
+import { User } from "../common/GeneralUserData.ts";
 
 function QnAList() {
   const [threads, setThreads] = useState<Thread[]>([]);
@@ -11,11 +11,21 @@ function QnAList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch threads when component mounts
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const page = parseInt(queryParams.get("page") || "1", 10);
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchThreads() {
       try {
-        const response = await fetch("/api/qa/list_threads.php");
+        const response = await fetch("/api/qa/list_threads.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ page }),
+        });
         const data: Post = await response.json();
 
         if (data.success) {
@@ -25,6 +35,7 @@ function QnAList() {
           setError("Failed to load threads");
         }
       } catch (err) {
+        console.log(err);
         setError("Error fetching threads");
       } finally {
         setLoading(false);
@@ -32,43 +43,68 @@ function QnAList() {
     }
 
     fetchThreads();
-  }, []);
+  }, [page]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0) {
+      navigate(`/qa?page=${newPage}`);
+    }
+  };
 
   return (
-    <div className="p-4 space-y-4 bg-blue-900 text-white h-100">
-      <h1 className="text-2xl font-bold">Questions & answers</h1>
-      {loading ? (<div>Loading threads...</div>) : error ? (
+    <div className="flex-1 py-4 space-y-4 bg-blue-900 text-white h-100">
+      <div className="flex justify-between px-6">
+        <h1 className="pb-1 text-2xl font-bold">Questions & answers</h1>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page <= 1}
+            className="text-white text-2xl"
+          >
+            &lt;
+          </button>
+          <span className="text-lg text-white">{page}</span>
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            className="text-white text-2xl"
+          >
+            &gt;
+          </button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div>Loading threads...</div>
+      ) : error ? (
         <div>Couldn't fetch threads; encountered error.</div>
+      ) : threads.length === 0 ? (
+        <div>No threads yet. Maybe you'll be the first to make one?</div>
       ) : (
-        threads.length === 0 ? (
-          <div>No threads yet. Maybe you'll be the first to make one?</div>
-        ) : (
-          <ul className="space-y-3">
-            {threads.map((thread) => (
-              <li
-                key={thread.id}
-                className="p-4 bg-blue-800 rounded-lg shadow-md hover:bg-blue-700"
+        <ul className="flex flex-col px-0 qna-thread-list bg-gray-600">
+          {threads.map((thread) => (
+            <li key={thread.id}>
+              <Link
+                to={`/qa/${thread.id}`}
+                className="block px-6 py-3 bg-gray-800 text-white qna-thread"
               >
                 <div className="flex justify-between">
-                  <div className="text-lg font-semibold">{thread.title}</div>
-                  <span className={`text-sm ${thread.is_locked ? "text-red-500" : "text-green-500"}`}>
-                    <Link
-                      to={`/qa/${thread.id}`}
-                      className="text-sm text-green-400 underline hover:text-green-300"
-                    >
-                      Open
-                    </Link>
+                  <div className="text-lg font-semibold">
+                    {thread.title}{" "}
+                    <span className="text-sm text-gray-400 font-normal">
+                      by {users[thread.user_id]?.display_name || "unknown user"}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-300 line-clamp-1">{thread.message}</p>
+                <div className="mt-1 text-xs text-gray-400">
+                  <span>
+                    Last updated: {new Date(thread.last_updated).toLocaleString()}
                   </span>
                 </div>
-                <p className="text-sm text-gray-300">{thread.message}</p>
-                <div className="mt-2 text-xs text-gray-400">
-                  <span>Posted by {users[thread.user_id].display_name || "unknown user"}</span> |
-                  <span> Last updated: {new Date(thread.last_updated).toLocaleString()}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
