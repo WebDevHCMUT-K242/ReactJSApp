@@ -7,6 +7,7 @@ import { User } from "../common/GeneralUserData.ts";
 
 function QnAList() {
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [maxPageNumber, setMaxPageNumber] = useState<number>(1);
   const [users, setUsers] = useState<Record<string, User>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,6 +32,7 @@ function QnAList() {
         if (data.success) {
           setUsers(data.users);
           setThreads(data.threads);
+          setMaxPageNumber(data.pages);
         } else {
           setError("Failed to load threads");
         }
@@ -55,18 +57,19 @@ function QnAList() {
     <div className="flex-1 py-4 space-y-4 bg-blue-900 text-white h-100">
       <div className="flex justify-between px-6">
         <h1 className="pb-1 text-2xl font-bold">Questions & answers</h1>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           <button
             onClick={() => handlePageChange(page - 1)}
             disabled={page <= 1}
-            className="text-white text-2xl"
+            className="text-white p-2 text-sm"
           >
             &lt;
           </button>
           <span className="text-lg text-white">{page}</span>
           <button
             onClick={() => handlePageChange(page + 1)}
-            className="text-white text-2xl"
+            disabled={page >= maxPageNumber}
+            className="text-white p-2 text-sm"
           >
             &gt;
           </button>

@@ -14,4 +14,5 @@ export interface Post {
   success: boolean;
   threads: Thread[];
   users: Record<number, User>;
+  pages: number;
 }
