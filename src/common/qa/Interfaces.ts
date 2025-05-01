@@ -11,8 +11,25 @@ export interface Thread {
 }
 
 export interface Post {
+  id: number;
+  thread_id: number;
+  user_id: number;
+  message: string;
+  timestamp: string;
+}
+
+export interface ThreadFetchResponse {
+  success: boolean | undefined;
+  threads: Thread[] | undefined;
+  users: Record<number, User> | undefined;
+  pages: number | undefined;
+  error: string | undefined;
+}
+
+export interface PostFetchResponse {
   success: boolean;
-  threads: Thread[];
-  users: Record<number, User>;
-  pages: number;
+  thread: Thread | undefined;
+  posts: Post[] | undefined;
+  users: Record<number, User> | undefined;
+  error: string | undefined;
 }

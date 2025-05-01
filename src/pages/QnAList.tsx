@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./QnAList.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import { Thread, Post } from "../common/qa/Interfaces.ts";
+import { Thread, ThreadFetchResponse } from "../common/qa/Interfaces.ts";
 import { User } from "../common/GeneralUserData.ts";
 
 function QnAList() {
@@ -27,17 +27,17 @@ function QnAList() {
           },
           body: JSON.stringify({ page }),
         });
-        const data: Post = await response.json();
+        const data: ThreadFetchResponse = await response.json();
 
         if (data.success) {
-          setUsers(data.users);
-          setThreads(data.threads);
-          setMaxPageNumber(data.pages);
+          setUsers(data.users!);
+          setThreads(data.threads!);
+          setMaxPageNumber(data.pages!);
         } else {
-          setError("Failed to load threads");
+          setError(data.error || "Failed to load threads");
         }
       } catch (err) {
-        console.log(err);
+        console.error(err);
         setError("Error fetching threads");
       } finally {
         setLoading(false);
@@ -56,7 +56,7 @@ function QnAList() {
   return (
     <div className="flex-1 py-4 space-y-4 bg-blue-900 text-white h-100">
       <div className="flex justify-between px-6">
-        <h1 className="pb-1 text-2xl font-bold">Questions & answers</h1>
+        <h1 className="pb-1 text-3xl font-medium">Questions & answers</h1>
         <div className="flex items-center space-x-2">
           <button
             onClick={() => handlePageChange(page - 1)}
@@ -91,19 +91,18 @@ function QnAList() {
                 className="block px-6 py-3 bg-gray-800 text-white qna-thread"
               >
                 <div className="flex justify-between">
-                  <div className="text-lg font-semibold">
-                    {thread.title}{" "}
-                    <span className="text-sm text-gray-400 font-normal">
+                  <div className="text-lg font-semibold flex-1">
+                    {thread.title}
+                    <span className="pl-1.5 text-sm text-gray-400 font-normal">
                       by {users[thread.user_id]?.display_name || "unknown user"}
                     </span>
                   </div>
-                </div>
-                <p className="text-sm text-gray-300 line-clamp-1">{thread.message}</p>
-                <div className="mt-1 text-xs text-gray-400">
-                  <span>
+
+                  <span className="mt-1 text-xs text-gray-400">
                     Last updated: {new Date(thread.last_updated).toLocaleString()}
                   </span>
                 </div>
+                <p className="text-sm text-gray-300 line-clamp-1">{thread.message}</p>
               </Link>
             </li>
           ))}
