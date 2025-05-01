@@ -7,7 +7,7 @@ import { User } from "../common/GeneralUserData.ts";
 
 function QnAList() {
   const [threads, setThreads] = useState<Thread[]>([]);
-  const [users, setUsers] = useState<Record<string, User>>([]);
+  const [users, setUsers] = useState<Record<string, User>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
