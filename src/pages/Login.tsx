@@ -2,7 +2,7 @@
 import { useAuth } from "../common/AuthContext.ts";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "./Login.css";
+// import "./Login.css";
 
 function Login() {
   const { login, logout } = useAuth();

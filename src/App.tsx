@@ -13,6 +13,8 @@ import Contact from "./pages/Contact.tsx";
 import Signup from "./pages/Signup.tsx";
 import QnAList from "./pages/QnAList.tsx";
 import QnAThread from "./pages/QnAThread.tsx";
+import ProductEdit from "./pages/ProductEdit.tsx";
+import Product from "./pages/Product.tsx";
 
 function App() {
   return (
@@ -28,6 +30,9 @@ function App() {
 
           <Route path="/qa" element={<QnAList />} />
           <Route path="/qa/:threadId" element={<QnAThread />} />
+
+          <Route path="/product/edit" element={<ProductEdit/>}/>
+          <Route path="/product/" element={<Product/>}/>
         </Routes>
         <Footer />
       </Router>

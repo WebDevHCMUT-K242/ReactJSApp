@@ -1,6 +1,6 @@
 // src/pages/Signup.tsx
 import { useState } from "react";
-import "./Signup.css";
+// import "./Signup.css";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
