@@ -6,7 +6,7 @@ import { Facebook, Instagram, Twitter, Linkedin, Youtube } from "lucide-react";
 
 function Footer() {
   return (
-    <div style={{background: "#071831"}}>
+    <div style={{background: "black"}}>
     
         <div style = {{width: "100%", display: "flex", flexFlow: "row wrap", justifyContent: "space-evenly", padding: "1rem"}}>
 
@@ -50,7 +50,7 @@ function Footer() {
          <footer className="border-t border-gray-200 dark:border-gray-700 py-6">
             <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-4">
                 <div className="flex flex-col md:flex-row items-center text-sm text-gray-500 dark:text-gray-400 space-y-2 md:space-y-0 md:space-x-4">
-                <span>© {new Date().getFullYear()} Relume. All rights reserved.</span>
+                <span>© {new Date().getFullYear()} All rights reserved.</span>
                 <a href="/privacy" className="hover:underline">Privacy Policy</a>
                 <a href="/terms" className="hover:underline">Terms of Service</a>
                 <a href="/cookies" className="hover:underline">Cookie Settings</a>

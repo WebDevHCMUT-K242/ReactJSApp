@@ -28,7 +28,7 @@ function Home() {
 				<a href="" className="btn btn-light" style={{marginLeft: "0.25rem"}}>Learn More</a>
 			</div>
 
-			<img src="home-img.png" style={{objectFit: "fill", width: "100%", aspectRatio: "4/1"}} />
+			<img src="home-img.png" style={{objectFit: "fill", width: "100%"}} />
 
 		  	
         </div>
@@ -72,7 +72,7 @@ function Home() {
 
       </div>
 
-      <div style={{background: "black"}}>
+      <div style={{background: "#071831"}}>
         <div className="myContainer v2">
             <div style = {{width: "45%", display: "flex", flexFlow: "column wrap", justifyContent: "center", position: "relative"}}>
 
