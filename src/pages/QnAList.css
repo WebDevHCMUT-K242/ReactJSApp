@@ -1,0 +1,9 @@
+.qna-thread-list {
+    gap: 1px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.geom {
+    text-rendering: geometricPrecision;
+}
