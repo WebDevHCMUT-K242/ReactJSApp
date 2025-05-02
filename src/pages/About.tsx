@@ -1,6 +1,9 @@
 import { useAuth } from "../common/AuthContext.ts";
 import { useEffect, useState } from "react";
 import TitleEdit from "./about_editing/TitleEdit.tsx";
+import Element from "./about_editing/Element.tsx";
+import ElementEdit from "./about_editing/ElementEdit.tsx";
+import ElementEditable from "./about_editing/ElementEditable.tsx";
 
 interface Element {
   id: number;
@@ -22,6 +25,7 @@ function About() {
   const [loading, setLoading] = useState(true);
 
   const [editedElement, setEditedElement] = useState<"title" | number | null>(null);
+  const [editedData, setEditedData] = useState<{type: string, text: string, index: number}>({ type: "", text: "", index: 0 });
 
   const isAdmin = !userAuthLoading && (userCore?.is_admin || false);
 
@@ -97,7 +101,12 @@ function About() {
         isEditing ? (
           <h1 className="flex flex-row gap-3 items-center mb-4 text-3xl font-medium">
             <button
-              onClick={() => setEditedElement("title")}
+              onClick={() => {
+                if (editedElement !== null) {
+                  updateElement(editedElement, editedData.type, editedData.text, editedData.index);
+                }
+                setEditedElement("title");
+              }}
               className="text-sm pl-6 pr-4 py-1 text-left bg-blue-700 text-white hover:bg-blue-600 disabled:bg-blue-950 disabled:text-gray-400 border-b-1 border-b-gray-800"
             >
               Edit title
@@ -111,33 +120,39 @@ function About() {
         )
       )}
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         {data.contents.map((el, i) => (
           <div key={el.id} className="space-y-1">
-            {isEditing ? (
-              <div className="flex gap-2 items-center">
-                <select
-                  value={el.type}
-                  onChange={(e) => updateElement(el.id, e.target.value, el.value, i)}
-                  className="bg-blue-800 text-white"
-                >
-                  <option value="h1">Heading 1</option>
-                  <option value="p">Paragraph</option>
-                </select>
-                <input
-                  className="bg-blue-800 text-white flex-1 px-2 py-1"
-                  value={el.value}
-                  onChange={(e) => updateElement(el.id, el.type, e.target.value, i)}
-                />
-                <button
-                  onClick={() => removeElement(el.id)}
-                  className="bg-red-600 px-2 py-1 hover:bg-red-500"
-                >
-                  Delete
-                </button>
-              </div>
+            {isEditing ? editedElement == el.id ? (
+              <ElementEdit
+                data={editedData}
+                setData={(newData: { type: string; text: string; }) => {
+                  setEditedData({ type: newData.type, text: newData.text, index: i });
+                }}
+                onStopEditing={() => {
+                  updateElement(el.id, editedData.type, editedData.text, i);
+                  setEditedElement(null);
+                }}
+              />
             ) : (
-              el.type === 'h1' ? <h1 className="text-xl font-bold">{el.value}</h1> : <p>{el.value}</p>
+              <ElementEditable
+                item={el}
+                index={i}
+                maxIndex={data.contents.length - 1}
+                onEdit={() => {
+                  if (editedElement === "title") {
+                    // ??
+                  } else if (editedElement !== null) {
+                    updateElement(editedElement, editedData.type, editedData.text, editedData.index);
+                  }
+                  setEditedElement(el.id);
+                  setEditedData({ type: el.type, text: el.text, index: i });
+                }}
+                onSetIndex={(i: number) => updateElement(el.id, el.type, el.text, i)}
+                onDelete={() => removeElement(el.id)}
+              />
+            ) : (
+              <Element item={el} />
             )}
           </div>
         ))}
@@ -145,7 +160,7 @@ function About() {
         {isEditing && (
           <button
             onClick={() => insertElement('p', 'New text', data.contents.length)}
-            className="mt-2 text-sm pl-6 pr-4 py-1 text-left bg-blue-700 text-white hover:bg-blue-600 disabled:bg-blue-950 disabled:text-gray-400 border-b-1 border-b-gray-800"
+            className="self-start text-sm pl-6 pr-4 py-1 text-left bg-blue-700 text-white hover:bg-blue-600 disabled:bg-blue-950 disabled:text-gray-400 border-b-1 border-b-gray-800"
             disabled={editedElement !== null}
           >
             Add element
