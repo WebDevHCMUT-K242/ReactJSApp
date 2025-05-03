@@ -118,32 +118,36 @@ function QnAList() {
         <div>Loading threads...</div>
       ) : error ? (
         <div>Couldn't fetch threads; encountered error.</div>
-      ) : threads.length === 0 ? (
-        <div>No threads yet. Maybe you'll be the first to make one?</div>
       ) : (
         <ul className="flex flex-col px-0 qna-thread-list bg-gray-600">
-          {threads.map((thread) => (
-            <li key={thread.id}>
-              <Link
-                to={`/qa/${thread.id}`}
-                className="block px-6 py-3 bg-gray-800 text-white qna-thread"
-              >
-                <div className="flex justify-between">
-                  <div className="text-lg font-semibold flex-1">
-                    {thread.title}
-                    <span className="pl-1.5 text-xs text-gray-300 font-normal">
-                      by <span className={"font-medium"}>{users[thread.user_id]!.display_name}</span> <span className={"text-gray-400"}>at {new Date(thread.timestamp).toLocaleString()}</span>
-                    </span>
-                  </div>
-
-                  <span className="mt-1 text-xs text-gray-400">
-                    Last updated {new Date(thread.last_updated).toLocaleString()}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-300 line-clamp-1">{thread.message}</p>
-              </Link>
+          {(threads.length === 0 && !userAuthLoading) ? (
+            <li className="px-6 py-2 bg-blue-950 text-white text-sm font-medium">
+              {userCore === null ? "No threads." : "No threads yet. Maybe you'll make the first?"}
             </li>
-          ))}
+          ) : (
+            threads.map((thread) => (
+              <li key={thread.id}>
+                <Link
+                  to={`/qa/${thread.id}`}
+                  className="block px-6 py-3 bg-gray-800 text-white qna-thread"
+                >
+                  <div className="flex justify-between">
+                    <div className="text-lg font-semibold flex-1">
+                      {thread.title}
+                      <span className="pl-1.5 text-xs text-gray-300 font-normal">
+                    by <span className={"font-medium"}>{users[thread.user_id]!.display_name}</span> <span className={"text-gray-400"}>at {new Date(thread.timestamp).toLocaleString()}</span>
+                  </span>
+                    </div>
+
+                    <span className="mt-1 text-xs text-gray-400">
+                  Last updated {new Date(thread.last_updated).toLocaleString()}
+                </span>
+                  </div>
+                  <p className="text-sm text-gray-300 line-clamp-1">{thread.message}</p>
+                </Link>
+              </li>
+            ))
+          )}
         </ul>
       )}
 

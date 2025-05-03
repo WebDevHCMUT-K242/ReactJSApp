@@ -125,12 +125,60 @@ function QnAThread() {
         return;
       }
 
-      console.log("ok");
-
       await fetchThread();
     } catch (err) {
       console.error("Error setting thread lock status:", err);
       setError("Error setting thread lock status.");
+    }
+  };
+
+  const handleDeletePost = async (postId: number) => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+
+    try {
+      const response = await fetch("/api/qa/delete_post.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ thread_id: Number(threadId), post_id: postId }),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        console.error("Failed to delete post:", data.error);
+        setError(data.error || "Failed to delete post.");
+        return;
+      }
+
+      await fetchThread();
+    } catch (err) {
+      console.error("Error deleting post:", err);
+      setError("Error deleting post.");
+    }
+  };
+
+  const handleDeleteThread = async () => {
+    if (!confirm("Are you sure you want to delete this thread?")) return;
+
+    try {
+      const response = await fetch("/api/qa/delete_thread.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ thread_id: Number(threadId) }),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        console.error("Failed to delete thread:", data.error);
+        setError(data.error || "Failed to delete thread.");
+        return;
+      }
+
+      window.location.href = "/qa";
+    } catch (err) {
+      console.error("Error deleting thread:", err);
+      setError("Error deleting thread.");
     }
   };
 
@@ -144,7 +192,15 @@ function QnAThread() {
             This thread is locked; no new replies can be made.
           </li>
         ) : ""}
-        <li key={"op"} className="px-6 py-3 bg-indigo-950 text-white text-sm">
+        <li key={"op"} className="group relative px-6 py-3 bg-indigo-950 text-white text-sm">
+          {(userCore?.user_id === t.user_id || userCore?.is_admin) && (
+            <button
+              onClick={handleDeleteThread}
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute top-2 right-4 bg-red-700 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full"
+            >
+              Delete thread
+            </button>
+          )}
           <div className="text-sm text-gray-500">
             <span className="font-medium">{users[t.user_id]!.display_name}</span> (OP) <span>at {new Date(t.timestamp).toLocaleString()}</span>
           </div>
@@ -155,7 +211,15 @@ function QnAThread() {
             {t.is_locked ? "No replies." : "No replies yet. Maybe you'll make the first?"}
           </li>
         ) : posts.map((post) => (
-          <li key={post.id} className="px-6 py-3 bg-slate-800 text-white text-sm">
+          <li key={post.id} className="group relative px-6 py-3 bg-slate-800 text-white text-sm">
+            {(userCore?.user_id === post.user_id || userCore?.is_admin) && (
+              <button
+                onClick={() => handleDeletePost(post.id)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute top-2 right-4 bg-red-700 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full"
+              >
+                Delete
+              </button>
+            )}
             <div className="text-sm text-gray-500">
               <span className="font-medium">{users[post.user_id]!.display_name}</span>{post.user_id === t.user_id ? " (OP)" : ""} <span>at {new Date(post.timestamp).toLocaleString()}</span>
             </div>

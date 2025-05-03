@@ -177,7 +177,7 @@ function About() {
             }}
             className="self-start pl-6 pr-4 py-1 flex-0 text-left text-sm bg-orange-700 hover:bg-orange-600 border-b border-gray-800"
           >
-            Admin: Stop editing page <span className="font-medium">(discards unsaved changes!)</span>
+            Admin: Stop editing page {editedElement !== null && <span className="font-medium">(discards unsaved changes!)</span>}
           </button>
         ) : (
           <button
