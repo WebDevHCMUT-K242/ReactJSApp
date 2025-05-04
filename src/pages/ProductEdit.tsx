@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  Button as MuiButton,
-  Card,
-  CardContent,
-  Tabs,
-  Tab,
-  Stack,
-  Snackbar,
-  Alert,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
+import TextField from '@mui/material/TextField';
+import MuiButton from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 import { useSearchParams } from "react-router-dom";
 
 const initialVariants: Array<{
@@ -63,7 +60,7 @@ export default function ProductEdit() {
     }
   }, [action, id]);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setSelectedIndex(newValue);
   };
 
@@ -245,7 +242,7 @@ export default function ProductEdit() {
                 <MuiButton variant="outlined" color="error" onClick={handleDeleteProduct}>
                   Delete Product
                 </MuiButton>
-                <MuiButton variant="outlined" onClick={handleAddVariant} startIcon={<AddIcon />}>
+                <MuiButton variant="outlined" onClick={handleAddVariant}>
                   Add Variant
                 </MuiButton>
                 <MuiButton
@@ -253,7 +250,6 @@ export default function ProductEdit() {
                   disabled={variants.length <= 1}
                   variant="outlined"
                   color="error"
-                  startIcon={<DeleteIcon />}
                 >
                   Delete Variant
                 </MuiButton>

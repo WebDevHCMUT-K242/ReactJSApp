@@ -45,7 +45,7 @@ export default function ArticleDetail() {
   const fetchData = async (firstLoad = false) => {
     if (firstLoad) setLoading(true);
     try {
-      const res = await fetch("/api/articles/get", {
+      const res = await fetch("/api/articles/get.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ article_id: Number(id) }),
@@ -75,7 +75,7 @@ export default function ArticleDetail() {
     if (!msg) return;
     try {
       setNewComment("");
-      const res = await fetch("/api/articles/add_comment", {
+      const res = await fetch("/api/articles/add_comment.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ article_id: Number(id), message: msg }),
@@ -94,7 +94,7 @@ export default function ArticleDetail() {
   const handleDeleteArticle = async () => {
     if (!window.confirm("Delete this article?")) return;
     try {
-      const res = await fetch("/api/articles/delete", {
+      const res = await fetch("/api/articles/delete.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ article_id: Number(id) }),
@@ -116,7 +116,7 @@ export default function ArticleDetail() {
   const handleDeleteComment = async (cid: number) => {
     if (!window.confirm('Delete this comment?')) return;
     try {
-      const res = await fetch("/api/articles/delete_comment", {
+      const res = await fetch("/api/articles/delete_comment.php", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ comment_id: cid }),
       });
@@ -142,7 +142,7 @@ export default function ArticleDetail() {
     const msg = editMessage.trim();
     if (!msg) return;
     try {
-      const res = await fetch('/api/articles/update_comment', {
+      const res = await fetch('/api/articles/update_comment.php', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ comment_id: cid, message: msg }),
       });
@@ -161,95 +161,99 @@ export default function ArticleDetail() {
   if (!article) return null;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      {/* Article Header */}
-      <h1 className="text-4xl font-bold">{article.title}</h1>
-      <p className="text-gray-500">
-        by <span className="font-medium">{article.users}</span> on{" "}
-        {new Date(article.timestamp).toLocaleDateString()}
-      </p>
-      {!authLoading && userCore && (userCore.user_id === article.user_id || userCore.is_admin) && (
-        <div className="flex space-x-4">
-          <button onClick={handleEditArticle} className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">Edit Article</button>
-          <button onClick={handleDeleteArticle} className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Delete Article</button>
+    <div className="size-full bg-white">
+      <div className="mx-auto p-6 space-y-6 flex flex-col lg:flex-row">
+        <div className="size-full max-w-3xl mx-auto">
+          {/* Article Header */}
+          <h1 className="text-4xl font-bold text-black">{article.title}</h1>
+          <p className="text-black">
+            by <span className="font-medium">{article.users}</span> on{" "}
+            {new Date(article.timestamp).toLocaleDateString()}
+          </p>
+          {!authLoading && userCore && (userCore.user_id === article.user_id || userCore.is_admin) && (
+            <div className="flex space-x-4">
+              <button onClick={handleEditArticle} className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">Edit Article</button>
+              <button onClick={handleDeleteArticle} className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Delete Article</button>
+            </div>
+          )}
+          {/* Article Content */}
+          <div
+            className="prose prose-lg text-black  mt-8"
+            dangerouslySetInnerHTML={{ __html: article.content }}
+          />
         </div>
-      )}
-      {/* Article Content */}
-      <div
-        className="prose prose-lg"
-        dangerouslySetInnerHTML={{ __html: article.content }}
-      />
-
-      {/* Comments Section */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Comments ({comments.length})</h2>
-        {comments.length === 0 && (
-          <p className="text-gray-600">Be the first to comment!</p>
-        )}
-        <ul className="space-y-4">
-          {comments.map(c => (
-            <li key={c.id} className="p-4 bg-gray-100 rounded-lg">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="font-medium">{c.user}</p>
-                  <p className="text-sm text-gray-500">
-                    {new Date(c.timestamp).toLocaleString()}
-                  </p>
-                </div>
-                {userCore && (userCore.user_id === c.user_id || userCore.is_admin) && (
-                  <div className="space-x-2">
-                    {!editingId || editingId !== c.id ? (
-                      <>
-                        <button onClick={() => startEdit(c)} className="text-blue-600 hover:underline text-sm">Edit</button>
-                        <button onClick={() => handleDeleteComment(c.id)} className="text-red-600 hover:underline text-sm">Delete</button>
-                      </>
-                    ) : (
-                      <>
-                        <button onClick={() => handleUpdateComment(c.id)} className="text-green-600 hover:underline text-sm">Save</button>
-                        <button onClick={cancelEdit} className="text-gray-600 hover:underline text-sm">Cancel</button>
-                      </>
+        <div className="size-full max-w-3xl mx-auto lg:max-w-lg">
+          {/* Comments Section */}
+          <div className="space-y-4 text-black">
+            <h2 className="text-2xl font-semibold">Comments ({comments.length})</h2>
+            {comments.length === 0 && (
+              <p className="text-gray-600">Be the first to comment!</p>
+            )}
+            <ul className="space-y-4">
+              {comments.map(c => (
+                <li key={c.id} className="p-4 bg-gray-100 rounded-lg">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-medium">{c.user}</p>
+                      <p className="text-sm text-gray-500">
+                        {new Date(c.timestamp).toLocaleString()}
+                      </p>
+                    </div>
+                    {userCore && (userCore.user_id === c.user_id || userCore.is_admin) && (
+                      <div className="space-x-2">
+                        {!editingId || editingId !== c.id ? (
+                          <>
+                            <button onClick={() => startEdit(c)} className="text-blue-600 hover:underline text-sm">Edit</button>
+                            <button onClick={() => handleDeleteComment(c.id)} className="text-red-600 hover:underline text-sm">Delete</button>
+                          </>
+                        ) : (
+                          <>
+                            <button onClick={() => handleUpdateComment(c.id)} className="text-green-600 hover:underline text-sm">Save</button>
+                            <button onClick={cancelEdit} className="text-gray-600 hover:underline text-sm">Cancel</button>
+                          </>
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
-              </div>
-              {editingId === c.id ? (
-                <textarea
-                  value={editMessage}
-                  onChange={e => setEditMessage(e.target.value)}
-                  className="w-full border border-gray-300 rounded p-2 mt-2"
-                  rows={3}
-                />
-              ) : (
-                <p className="mt-2">{c.message}</p>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* New Comment Form */}
-      {!authLoading && userCore ? (
-        <div className="space-y-2">
-          <textarea
-            className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={4}
-            placeholder="Write your comment..."
-            value={newComment}
-            onChange={e => setNewComment(e.target.value)}
-          />
-          <button
-            onClick={handleCommentSubmit}
-            disabled={!newComment.trim()}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-          >
-            Post Comment
-          </button>
+                  {editingId === c.id ? (
+                    <textarea
+                      value={editMessage}
+                      onChange={e => setEditMessage(e.target.value)}
+                      className="w-full border border-gray-300 rounded p-2 mt-2 text-black"
+                      rows={3}
+                    />
+                  ) : (
+                    <p className="mt-2">{c.message}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* New Comment Form */}
+          {!authLoading && userCore ? (
+            <div className="space-y-2 mt-4">
+              <textarea
+                className="w-full border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 text-black focus:ring-blue-500"
+                rows={4}
+                placeholder="Write your comment..."
+                value={newComment}
+                onChange={e => setNewComment(e.target.value)}
+              />
+              <button
+                onClick={handleCommentSubmit}
+                disabled={!newComment.trim()}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                Post Comment
+              </button>
+            </div>
+          ) : (
+            <p className="text-gray-600">
+              Please <a href="/login" className="text-blue-600 underline">login</a> to comment.
+            </p>
+          )}
         </div>
-      ) : (
-        <p className="text-gray-600">
-          Please <a href="/login" className="text-blue-600 underline">login</a> to comment.
-        </p>
-      )}
+      </div>
     </div>
   );
 }

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-  Tabs,
-  Tab,
-  Card,
-  CardContent,
-  Button as MuiButton,
-  CircularProgress,
-} from "@mui/material";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+// import Button from '@mui/material/Button'; // if needed later
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Variant {
   id: number;
@@ -53,7 +51,7 @@ export default function Product() {
     fetchProduct();
   }, [id]);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
     setSelectedVariant(variants[newValue]);
   };
@@ -93,7 +91,7 @@ export default function Product() {
               scrollButtons="auto"
               className="my-2"
             >
-              {variants.map((variant, index) => (
+              {variants.map((variant) => (
                 <Tab key={variant.id} label={variant.name} />
               ))}
             </Tabs>

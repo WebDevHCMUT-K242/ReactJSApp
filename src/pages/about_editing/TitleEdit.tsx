@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-function TitleEdit({ originalTitle, onSaveTitle }) {
+const TitleEdit: React.FC<{ originalTitle: string , onSaveTitle: (title:string)=>void }> = ({ originalTitle , onSaveTitle }) => {
   const [title, setTitle] = useState(originalTitle);
   return (
     <div className="flex flex-col">

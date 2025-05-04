@@ -1,5 +1,5 @@
 
-import Footer from "../common/Footer";
+// import Footer from "../common/Footer";
 import "./Home.css";
 
 function Home() {
