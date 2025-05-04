@@ -71,14 +71,14 @@ export default function Product() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <Card className="rounded-2xl shadow-lg">
+    <div className="w-full h-full mx-auto bg-white flex flex-col">
+      <Card className="rounded-2xl shadow-lg lg:max-w-5xl w-full mx-auto">
         <CardContent className="grid md:grid-cols-2 gap-6">
           <div>
             <img
               src={selectedVariant.image.replace(/\\\//g, "/")}
               alt={selectedVariant.name}
-              className="rounded-xl w-full h-auto"
+              className="rounded-xl w-full h-auto max-w-lg"
             />
           </div>
           <div className="flex flex-col gap-4">
@@ -98,17 +98,11 @@ export default function Product() {
               ))}
             </Tabs>
 
-            <MuiButton
-              variant="contained"
-              style={{ backgroundColor: "#facc15", color: "#000" }}
-            >
-              Add to Cart
-            </MuiButton>
           </div>
         </CardContent>
       </Card>
 
-      <div className="mt-6 p-4 bg-white rounded-2xl shadow-md">
+      <div className="mt-6 p-4 bg-white rounded-xl shadow-md lg:max-w-5xl w-full mx-auto">
         <h2 className="text-xl font-semibold mb-2">Product Description</h2>
         <p className="text-gray-700 text-base">{product.description}</p>
       </div>
