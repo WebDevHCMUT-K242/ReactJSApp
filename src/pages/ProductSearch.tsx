@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import CardActionArea from '@mui/material/CardActionArea';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../common/AuthContext';
 
 type Variant = {
   name: string;
@@ -27,17 +28,15 @@ const ProductSearch: React.FC = () => {
   const [isLastPage, setIsLastPage] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-
-  const fetchAdminStatus = async () => {
-    try {
-      const res = await fetch('/api/user/me.php');
-      const data = await res.json();
-      const flag = data.user.is_admin;
-      setIsAdmin(Boolean(flag));
-    } catch (err) {
-      console.error('Failed to fetch user status:', err);
+  const { userCore, loading: authLoading } = useAuth()
+  
+  useEffect(()=>{
+    if(userCore?.is_admin) {
+      setIsAdmin(true)
+    } else {
+      setIsAdmin(false)
     }
-  };
+  }, [userCore])
 
   const fetchResults = async () => {
     try {
@@ -82,7 +81,6 @@ const ProductSearch: React.FC = () => {
     }
   };
   useEffect(() => {
-    fetchAdminStatus();
     fetchResults();
   }, []);
 

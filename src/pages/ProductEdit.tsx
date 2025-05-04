@@ -8,8 +8,9 @@ import Tab from '@mui/material/Tab';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-
+import { useAuth } from "../common/AuthContext";
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const initialVariants: Array<{
   id: string;
@@ -35,10 +36,10 @@ export default function ProductEdit() {
   const [toastSeverity, setToastSeverity] = useState<"success" | "error">("success");
   const [searchParams] = useSearchParams();
   const [newImages, setNewImages] = useState<Record<string, File>>({});
-
+  const { userCore, loading: authLoading } = useAuth()
   const action = searchParams.get("action");
   const id = searchParams.get("id");
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (action === "edit" && id) {
       fetch(`/api/product/product.php?action=get&id=${id}`)
@@ -225,7 +226,11 @@ export default function ProductEdit() {
     !productName.trim() ||
     !description.trim() ||
     variants.some((v) => !v.name.trim() || !v.price.trim() || isNaN(Number(v.price)));
-
+  useEffect(()=>{
+    if(!userCore?.is_admin) {
+      navigate(`/product?id=${id}`)
+    }
+  }, [userCore])
   return (
     <div className="bg-white size-full">
       <div className="max-w-7xl mx-auto p-4">
