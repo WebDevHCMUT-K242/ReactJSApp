@@ -1,6 +1,8 @@
-import { useState } from "react";
-
-function ElementEdit({ data, setData, onStopEditing }) {
+function ElementEdit({ data, setData, onStopEditing }: {
+  data: {type: string, text: string},
+  setData: (newData: {type: string, text: string}) => void,
+  onStopEditing: () => void,
+}) {
   const typeOptions = [
     { label: "Heading 1", value: "h1" },
     { label: "Heading 2", value: "h2" },
@@ -26,17 +28,14 @@ function ElementEdit({ data, setData, onStopEditing }) {
   let imageData = { width: 1, url: "" };
   try {
     imageData = JSON.parse(data.text);
-    if (typeof imageData.width !== "number" || typeof imageData.url !== "string") {
-      imageData = { width: 1, url: "" };
-    }
   } catch {
     imageData = { width: 1, url: "" };
   }
 
-  const updateImageData = (newData) => {
+  const updateImageWidth = (width: number) => {
     setData({
       type: "img",
-      text: JSON.stringify({ ...imageData, ...newData }),
+      text: JSON.stringify({ width, url: imageData.url }),
     });
   };
 
@@ -73,7 +72,7 @@ function ElementEdit({ data, setData, onStopEditing }) {
           <select
             className="bg-gray-900 text-white border border-gray-700 px-4 py-1"
             value={imageData.width}
-            onChange={(e) => updateImageData({ width: parseFloat(e.target.value) })}
+            onChange={(e) => updateImageWidth(parseFloat(e.target.value))}
           >
             <option value="0.3">0.3x of page width</option>
             <option value="0.5">0.5x of page width</option>

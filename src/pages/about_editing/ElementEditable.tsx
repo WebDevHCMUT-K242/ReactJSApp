@@ -1,6 +1,13 @@
 import renderTextWithLinks from "../../common/about/LinkRendering.tsx";
 
-function ElementEditable({ item, index, maxIndex, onEdit, onSetIndex, onDelete }) {
+function ElementEditable({ item, index, maxIndex, onEdit, onSetIndex, onDelete }: {
+  item: { type: string, text: string },
+  index: number,
+  maxIndex: number,
+  onEdit: () => void,
+  onSetIndex: (newIndex: number) => void,
+  onDelete: () => void
+}) {
   const elementTypeLabel = (() => {
     switch (item.type) {
       case "h1":

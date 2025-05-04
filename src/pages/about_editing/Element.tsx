@@ -1,6 +1,6 @@
 import renderTextWithLinks from "../../common/about/LinkRendering";
 
-function Element({ item }) {
+function Element({ item }: { item: {type: string, text: string} }) {
   if (item.type === "h1") {
     return <h1 className="text-3xl px-6">{renderTextWithLinks(item.text)}</h1>;
   } else if (item.type === "h2") {

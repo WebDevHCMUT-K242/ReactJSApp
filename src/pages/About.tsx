@@ -18,11 +18,10 @@ interface Data {
 }
 
 function About() {
-  const { userCore, userMeta, logout, loading: userAuthLoading } = useAuth();
+  const { userCore, loading: userAuthLoading } = useAuth();
 
   const [isEditing, setIsEditing] = useState(false);
   const [data, setData] = useState<Data>({ title: '', contents: [], last_updated: 0 });
-  const [loading, setLoading] = useState(true);
 
   const [editedElement, setEditedElement] = useState<"title" | number | null>(null);
   const [editedData, setEditedData] = useState<{type: string, text: string, index: number}>({ type: "", text: "", index: 0 });
@@ -40,7 +39,6 @@ function About() {
         if (json.success) {
           setData(json.data);
         }
-        setLoading(false);
       });
   }, []);
 
