@@ -1,12 +1,17 @@
+import renderTextWithLinks from "../../common/about/LinkRendering";
+
 function Element({ item }) {
-  return (
-    <div className="pl-6">
-      {item.type === "h1" && <h1 className="text-3xl">{item.text}</h1>}
-      {item.type === "h2" && <h2 className="text-2xl">{item.text}</h2>}
-      {item.type === "h3" && <h3 className="text-xl">{item.text}</h3>}
-      {item.type === "p" && <p className="text-base">{item.text}</p>}
-    </div>
-  );
+  if (item.type === "h1") {
+    return <h1 className="text-3xl px-6">{renderTextWithLinks(item.text)}</h1>;
+  } else if (item.type === "h2") {
+    return <h2 className="text-2xl px-6">{renderTextWithLinks(item.text)}</h2>;
+  } else if (item.type === "h3") {
+    return <h3 className="text-xl px-6">{renderTextWithLinks(item.text)}</h3>;
+  } else if (item.type === "p") {
+    return <p className="text-base px-6">{renderTextWithLinks(item.text)}</p>;
+  } else {
+    return null;
+  }
 }
 
 export default Element;
