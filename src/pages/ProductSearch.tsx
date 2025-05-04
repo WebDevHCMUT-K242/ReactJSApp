@@ -46,7 +46,7 @@ const ProductSearch: React.FC = () => {
   const fetchResults = async () => {
     try {
       const res = await fetch(
-        `/api/product/search.php?q=${encodeURIComponent(search)}&page=${page}&limit=5`
+        `/api/product/search.php?q=${encodeURIComponent(search)}&page=${page}&limit=6`
       );
       const jsonRes = await res.json();
       const { product_ids: productIds }: { product_ids: number[] } = jsonRes
@@ -96,7 +96,7 @@ const ProductSearch: React.FC = () => {
 
   return (
     <div className="bg-white w-full h-full">
-      <div className=" mx-auto p-8 h-full">
+      <div className=" mx-auto p-8 h-full flex flex-col">
         {/* Search + Add */}
         <div className="flex flex-wrap gap-2 items-center mb-6">
           <div className="flex-grow">
@@ -121,7 +121,7 @@ const ProductSearch: React.FC = () => {
         </div>
 
         {/* Product Cards */}
-        <Grid container spacing={3} className="mb-auto" size="grow">
+        <Grid container spacing={3} className="flex-1" size="grow">
           {results.map((product) => {
             const images = product.variants.map((v) => v.image).filter(Boolean);
             const firstImage = images[0];
@@ -131,18 +131,16 @@ const ProductSearch: React.FC = () => {
 
             return (
               <Grid size={{xs: 12, md: 6, lg: 4}} >
-                  <div onClick={()=>{navigate(`/product?id=${product.id}`)}}>
                     <Card
-                      className="rounded-2xl shadow-md w-full flex flex-col justify-between "
-                    
+                      className="rounded-2xl shadow-md w-full flex flex-col justify-between md:flex-row "
                       >
-                        <CardActionArea>
+                        <CardActionArea onClick={()=>{navigate(`/product?id=${product.id}`)}}>
                           <CardContent className="flex flex-col md:flex-row items-start md:items-center gap-4 grow">
                             {firstImage && (
                               <img
                                 src={firstImage}
                                 alt="Product"
-                                className="w-32 h-32 object-cover rounded-xl"
+                                className="size-full object-cover rounded-xl md:size-32"
                               />
                             )}
                             <div className="flex-1">
@@ -155,8 +153,10 @@ const ProductSearch: React.FC = () => {
                                 Variants: {product.variants.map((v) => v.name).join(', ')}
                               </Typography>
                             </div>
+                          </CardContent>
+                        </CardActionArea>
                             {isAdmin && (
-                              <div className="flex gap-2 self-start md:self-center">
+                              <div className="flex gap-2 self-start md:self-center md:flex-col md:mr-4">
                                 <IconButton
                                   onClick={() =>
                                     navigate(`/product/edit?action=edit&id=${product.id}`)
@@ -169,10 +169,7 @@ const ProductSearch: React.FC = () => {
                                 </IconButton>
                               </div>
                             )}
-                          </CardContent>
-                        </CardActionArea>
                     </Card>
-                  </div>
               </Grid>
             );
           })}

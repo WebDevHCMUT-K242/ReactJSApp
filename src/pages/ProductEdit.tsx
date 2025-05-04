@@ -230,153 +230,148 @@ export default function ProductEdit() {
     variants.some((v) => !v.name.trim() || !v.price.trim() || isNaN(Number(v.price)));
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <Snackbar open={toastOpen} autoHideDuration={3000} onClose={() => setToastOpen(false)}>
-        <Alert onClose={() => setToastOpen(false)} severity={toastSeverity} sx={{ width: "100%" }}>
-          {toastMessage}
-        </Alert>
-      </Snackbar>
-
-      <Card className="rounded-2xl shadow-lg">
-        <CardContent>
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold">Edit Product Variants</h1>
-            <Stack direction="row" spacing={1}>
-              <MuiButton variant="outlined" color="error" onClick={handleDeleteProduct}>
-                Delete Product
-              </MuiButton>
-              <MuiButton variant="outlined" onClick={handleAddVariant} startIcon={<AddIcon />}>
-                Add Variant
-              </MuiButton>
-              <MuiButton
-                onClick={handleRemoveVariant}
-                disabled={variants.length <= 1}
-                variant="outlined"
-                color="error"
-                startIcon={<DeleteIcon />}
-              >
-                Delete Variant
-              </MuiButton>
-            </Stack>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="flex flex-col gap-4">
-              <TextField
-                label="Product Name"
-                fullWidth
-                value={productName}
-                onChange={(e) => setProductName(sanitizeInput(e.target.value))}
-              />
-              <p className="text-sm text-red-600 h-5">
-                {!productName.trim() ? "Product name is required" : ""}
-              </p>
-
-              <TextField
-                label="Description"
-                fullWidth
-                multiline
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(sanitizeInput(e.target.value))}
-              />
-              <p className="text-sm text-red-600 h-5">
-                {!description.trim() ? "Description is required" : ""}
-              </p>
-
-              {variants.length > 0 && (
-                <>
-                  <Tabs value={selectedIndex} onChange={handleTabChange} variant="scrollable" scrollButtons="auto">
-                    {variants.map((variant, index) => {
-                      const hasError =
-                        !variant.name?.trim() ||
-                        !variant.price?.trim() ||
-                        isNaN(Number(variant.price)) ||
-                        !variant.image?.trim();
-                      return (
-                        <Tab
-                          key={variant.id}
-                          label={variant.name || `Variant ${index + 1}`}
-                          sx={hasError ? { color: "red" } : {}}
+    <div className="bg-white size-full">
+      <div className="max-w-7xl mx-auto p-4">
+        <Snackbar open={toastOpen} autoHideDuration={3000} onClose={() => setToastOpen(false)}>
+          <Alert onClose={() => setToastOpen(false)} severity={toastSeverity} sx={{ width: "100%" }}>
+            {toastMessage}
+          </Alert>
+        </Snackbar>
+        <Card className="rounded-2xl shadow-lg">
+          <CardContent>
+            <div className="flex items-center justify-between mb-4 flex-col md:flex-row">
+              <h1 className="text-2xl font-bold ">Edit Product</h1>
+              <Stack direction="row" spacing={1}>
+                <MuiButton variant="outlined" color="error" onClick={handleDeleteProduct}>
+                  Delete Product
+                </MuiButton>
+                <MuiButton variant="outlined" onClick={handleAddVariant} startIcon={<AddIcon />}>
+                  Add Variant
+                </MuiButton>
+                <MuiButton
+                  onClick={handleRemoveVariant}
+                  disabled={variants.length <= 1}
+                  variant="outlined"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                >
+                  Delete Variant
+                </MuiButton>
+              </Stack>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-4">
+                <TextField
+                  label="Product Name"
+                  fullWidth
+                  value={productName}
+                  onChange={(e) => setProductName(sanitizeInput(e.target.value))}
+                />
+                <p className="text-sm text-red-600 h-5">
+                  {!productName.trim() ? "Product name is required" : ""}
+                </p>
+                <TextField
+                  label="Description"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  value={description}
+                  onChange={(e) => setDescription(sanitizeInput(e.target.value))}
+                />
+                <p className="text-sm text-red-600 h-5">
+                  {!description.trim() ? "Description is required" : ""}
+                </p>
+                {variants.length > 0 && (
+                  <>
+                    <Tabs value={selectedIndex} onChange={handleTabChange} variant="scrollable" scrollButtons="auto">
+                      {variants.map((variant, index) => {
+                        const hasError =
+                          !variant.name?.trim() ||
+                          !variant.price?.trim() ||
+                          isNaN(Number(variant.price)) ||
+                          !variant.image?.trim();
+                        return (
+                          <Tab
+                            key={variant.id}
+                            label={variant.name || `Variant ${index + 1}`}
+                            sx={hasError ? { color: "red" } : {}}
+                          />
+                        );
+                      })}
+                    </Tabs>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <TextField
+                          label="Variant Name"
+                          name="name"
+                          fullWidth
+                          value={variants[selectedIndex]?.name || ""}
+                          onChange={handleVariantChange}
                         />
-                      );
-                    })}
-                  </Tabs>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <TextField
-                        label="Variant Name"
-                        name="name"
-                        fullWidth
-                        value={variants[selectedIndex]?.name || ""}
-                        onChange={handleVariantChange}
-                      />
-                      <p className="text-sm text-red-600 h-5">
-                        {!variants[selectedIndex]?.name?.trim() ? "Variant name is required" : ""}
-                      </p>
+                        <p className="text-sm text-red-600 h-5">
+                          {!variants[selectedIndex]?.name?.trim() ? "Variant name is required" : ""}
+                        </p>
+                      </div>
+                      <div>
+                        <TextField
+                          label="Price"
+                          name="price"
+                          fullWidth
+                          value={variants[selectedIndex]?.price || ""}
+                          onChange={handleVariantChange}
+                        />
+                        <p className="text-sm text-red-600 h-5">
+                          {!variants[selectedIndex]?.price?.trim()
+                            ? "Price is required"
+                            : isNaN(Number(variants[selectedIndex]?.price))
+                            ? "Price must be a number"
+                            : ""}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <TextField
-                        label="Price"
-                        name="price"
-                        fullWidth
-                        value={variants[selectedIndex]?.price || ""}
-                        onChange={handleVariantChange}
-                      />
-                      <p className="text-sm text-red-600 h-5">
-                        {!variants[selectedIndex]?.price?.trim()
-                          ? "Price is required"
-                          : isNaN(Number(variants[selectedIndex]?.price))
-                          ? "Price must be a number"
-                          : ""}
-                      </p>
-                    </div>
-                  </div>
-                </>
+                  </>
+                )}
+              </div>
+              {variants.length > 0 && (
+                <div
+                  onDrop={handleImageDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  className={`mt-4 lg:mt-0 p-4 border-2 border-dashed rounded-xl text-center transition-colors duration-300 ${
+                    dragActive ? "border-blue-500 bg-blue-50" : "border-gray-300"
+                  }`}
+                >
+                  <p className="text-sm text-gray-600 mb-2">Drag and drop an image here (image files only)</p>
+                  {variants[selectedIndex]?.image && (
+                    <img
+                      src={
+                        variants[selectedIndex].image.startsWith("data:")
+                          ? variants[selectedIndex].image
+                          : variants[selectedIndex].image.startsWith("/uploaded_images/")
+                          ? variants[selectedIndex].image
+                          : `/uploaded_images/${variants[selectedIndex].image}`
+                      }
+                      alt="Preview"
+                      className="mx-auto mb-2 max-h-60 object-contain"
+                    />
+                  )}
+                  {!variants[selectedIndex]?.image && <p className="text-sm text-red-600">Image is required</p>}
+                </div>
               )}
             </div>
-
-            {variants.length > 0 && (
-              <div
-                onDrop={handleImageDrop}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                className={`mt-4 lg:mt-0 p-4 border-2 border-dashed rounded-xl text-center transition-colors duration-300 ${
-                  dragActive ? "border-blue-500 bg-blue-50" : "border-gray-300"
-                }`}
+            <div className="mt-10">
+              <MuiButton
+                variant="contained"
+                disabled={isFieldEmpty}
+                style={{ backgroundColor: isFieldEmpty ? "#d1d5db" : "#22c55e", color: "white" }}
+                onClick={handleSave}
               >
-                <p className="text-sm text-gray-600 mb-2">Drag and drop an image here (image files only)</p>
-                {variants[selectedIndex]?.image && (
-                  <img
-                    src={
-                      variants[selectedIndex].image.startsWith("data:")
-                        ? variants[selectedIndex].image
-                        : variants[selectedIndex].image.startsWith("/uploaded_images/")
-                        ? variants[selectedIndex].image
-                        : `/uploaded_images/${variants[selectedIndex].image}`
-                    }
-                    alt="Preview"
-                    className="mx-auto mb-2 max-h-60 object-contain"
-                  />
-                )}
-                {!variants[selectedIndex]?.image && <p className="text-sm text-red-600">Image is required</p>}
-              </div>
-            )}
-          </div>
-
-          <div className="mt-10">
-            <MuiButton
-              variant="contained"
-              disabled={isFieldEmpty}
-              style={{ backgroundColor: isFieldEmpty ? "#d1d5db" : "#22c55e", color: "white" }}
-              onClick={handleSave}
-            >
-              Save Changes
-            </MuiButton>
-          </div>
-        </CardContent>
-      </Card>
+                Save Changes
+              </MuiButton>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
