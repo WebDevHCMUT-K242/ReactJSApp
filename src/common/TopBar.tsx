@@ -13,6 +13,7 @@ function TopBar() {
         <Link to="/about">About</Link>
         <Link to="/qa">Q&A</Link>
         <Link to="/contact">Contact</Link>
+        <Link to="/articles">Articles</Link>
       </div>
       <div
         className="top-bar-user flex flex-wrap justify-evenly w-40"
