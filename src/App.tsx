@@ -15,6 +15,7 @@ import QnAList from "./pages/QnAList.tsx";
 import QnAThread from "./pages/QnAThread.tsx";
 import ProductEdit from "./pages/ProductEdit.tsx";
 import Product from "./pages/Product.tsx";
+import ProductSearch from "./pages/ProductSearch.tsx";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
 
           <Route path="/product/edit" element={<ProductEdit/>}/>
           <Route path="/product/" element={<Product/>}/>
+          <Route path="/product/search" element={<ProductSearch/>}/>
         </Routes>
         <Footer />
       </Router>
