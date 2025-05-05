@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-  IconButton,
-  CardActionArea
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import CardActionArea from '@mui/material/CardActionArea';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../common/AuthContext';
 
 type Variant = {
   name: string;
@@ -31,17 +28,15 @@ const ProductSearch: React.FC = () => {
   const [isLastPage, setIsLastPage] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-
-  const fetchAdminStatus = async () => {
-    try {
-      const res = await fetch('/api/user/me.php');
-      const data = await res.json();
-      const flag = data.user.is_admin;
-      setIsAdmin(Boolean(flag));
-    } catch (err) {
-      console.error('Failed to fetch user status:', err);
+  const { userCore, loading: authLoading } = useAuth()
+  
+  useEffect(()=>{
+    if(userCore?.is_admin) {
+      setIsAdmin(true)
+    } else {
+      setIsAdmin(false)
     }
-  };
+  }, [userCore])
 
   const fetchResults = async () => {
     try {
@@ -72,10 +67,10 @@ const ProductSearch: React.FC = () => {
     }
   };
 
-  const handleSearch = () => {
-    setPage(1);
-    fetchResults();
-  };
+  // const handleSearch = () => {
+  //   setPage(1);
+  //   fetchResults();
+  // };
 
   const handleDelete = async (productId: number) => {
     try {
@@ -86,7 +81,6 @@ const ProductSearch: React.FC = () => {
     }
   };
   useEffect(() => {
-    fetchAdminStatus();
     fetchResults();
   }, []);
 
@@ -157,16 +151,15 @@ const ProductSearch: React.FC = () => {
                         </CardActionArea>
                             {isAdmin && (
                               <div className="flex gap-2 self-start md:self-center md:flex-col md:mr-4">
-                                <IconButton
-                                  onClick={() =>
+
+                                <Button variant="outlined" color="error" onClick={() => handleDelete(product.id)}>
+                                  Delete
+                                </Button>
+                                <Button variant="outlined"                                   onClick={() =>
                                     navigate(`/product/edit?action=edit&id=${product.id}`)
-                                  }
-                                >
-                                  <Edit />
-                                </IconButton>
-                                <IconButton onClick={() => handleDelete(product.id)}>
-                                  <Delete />
-                                </IconButton>
+                                  }>
+                                  Edit
+                                </Button>
                               </div>
                             )}
                     </Card>

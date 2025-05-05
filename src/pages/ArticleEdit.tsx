@@ -43,7 +43,7 @@ export default function ArticleEdit() {
   const fetchArticle = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/articles/get", {
+      const res = await fetch("/api/articles/get.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ article_id: Number(id) }),
@@ -75,7 +75,7 @@ export default function ArticleEdit() {
       return;
     }
     try {
-      const res = await fetch("/api/articles/update", {
+      const res = await fetch("/api/articles/update.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -101,43 +101,45 @@ export default function ArticleEdit() {
   if (!article) return null;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      <h1 className="text-4xl font-bold">Edit Article</h1>
-      <p className="text-gray-500">
-        by <span className="font-medium">{article.users}</span> on {new Date(article.timestamp).toLocaleDateString()}
-      </p>
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
-          <input
-            type="text"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Content</label>
-          <textarea
-            value={content}
-            onChange={e => setContent(e.target.value)}
-            rows={8}
-            className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="flex space-x-4">
-          <button
-            onClick={handleUpdate}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-          >
-            Save Changes
-          </button>
-          <button
-            onClick={() => navigate(`/articles/${id}`)}
-            className="px-4 py-2 border rounded hover:bg-gray-100 transition"
-          >
-            Cancel
-          </button>
+    <div className="size-full bg-white text-black">
+      <div className="size-full max-w-4xl mx-auto p-6 space-y-6">
+        <h1 className="text-4xl font-bold w-full">Edit Article</h1>
+        <p className="text-gray-500">
+          by <span className="font-medium">{article.users}</span> on {new Date(article.timestamp).toLocaleDateString()}
+        </p>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Title</label>
+            <input
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Content</label>
+            <textarea
+              value={content}
+              onChange={e => setContent(e.target.value)}
+              rows={8}
+              className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex space-x-4">
+            <button
+              onClick={handleUpdate}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+            >
+              Save Changes
+            </button>
+            <button
+              onClick={() => navigate(`/articles/${id}`)}
+              className="px-4 py-2 border rounded hover:bg-gray-100 transition"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
