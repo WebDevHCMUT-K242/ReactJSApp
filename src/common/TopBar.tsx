@@ -4,7 +4,8 @@ import { useAuth } from "./AuthContext.ts";
 import "./TopBar.css";
 
 function TopBar() {
-  const { userCore, userMeta, logout, loading } = useAuth();
+  const { userCore, userMeta, logout, loading, loading: userAuthLoading } = useAuth();
+  const isAdmin = !userAuthLoading && (userCore?.is_admin || false);
 
   return (
     <div className="top-bar">
@@ -12,7 +13,11 @@ function TopBar() {
         <Link to="/">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/qa">Q&A</Link>
-        <Link to="/contact">Contact</Link>
+        {isAdmin && (
+          <Link to="/admincontact">Manage Contacts</Link>
+        )}
+          <Link to="/contact">Contact</Link>
+        
         <Link to="/articles">Articles</Link>
         <Link to="/product/search">Products</Link>
         <Link to="/order">Orders</Link>

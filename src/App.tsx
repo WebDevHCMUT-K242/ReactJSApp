@@ -12,6 +12,7 @@ import TopBar from "./common/TopBar.tsx";
 import Footer from "./common/Footer.tsx";
 import "./App.css";
 import Contact from "./pages/Contact.tsx";
+import AdminContact from "./pages/AdminContact.tsx";
 import Signup from "./pages/Signup.tsx";
 import QnAList from "./pages/QnAList.tsx";
 import QnAThread from "./pages/QnAThread.tsx";
@@ -28,7 +29,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admincontact" element={<AdminContact />} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/articles" element={<ArticleList />} />
