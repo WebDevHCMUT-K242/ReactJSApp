@@ -15,6 +15,7 @@ function TopBar() {
         <Link to="/contact">Contact</Link>
         <Link to="/articles">Articles</Link>
         <Link to="/product/search">Products</Link>
+        <Link to="/order">Orders</Link>
       </div>
       <div
         className="top-bar-user flex flex-wrap justify-evenly w-40"

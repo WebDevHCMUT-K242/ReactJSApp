@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-// import Button from '@mui/material/Button'; // if needed later
-import CircularProgress from '@mui/material/CircularProgress';
-
+import {
+  Tabs,
+  Tab,
+  Card,
+  CardContent,
+  Button,
+  CircularProgress,
+  Typography,
+} from '@mui/material';
+import { useAuth } from "../common/AuthContext";
 interface Variant {
   id: number;
   product_id: number;
@@ -28,8 +31,11 @@ export default function Product() {
   const [product, setProduct] = useState<ProductData | null>(null);
   const [variants, setVariants] = useState<Variant[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
-  const [tabValue, setTabValue] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [tabValue, setTabValue] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [amount, setAmount] = useState<number>(1);
+  const [adding, setAdding] = useState<boolean>(false);
+  const {userCore} = useAuth()
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -40,7 +46,7 @@ export default function Product() {
         const data = await res.json();
         setProduct(data.product);
         setVariants(data.variants);
-        setSelectedVariant(data.variants[0]);
+        setSelectedVariant(data.variants[0] || null);
       } catch (err) {
         console.error("Error fetching product:", err);
       } finally {
@@ -53,7 +59,40 @@ export default function Product() {
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
-    setSelectedVariant(variants[newValue]);
+    setSelectedVariant(variants[newValue] || null);
+    setAmount(1);
+  };
+
+  const adjustAmount = (delta: number) => {
+    setAmount(prev => Math.max(1, prev + delta));
+  };
+
+  const handleAddToCart = async () => {
+    if (!selectedVariant || !product) return;
+    setAdding(true);
+    try {
+      const form = new URLSearchParams();
+      form.append('product_id', product.id.toString());
+      form.append('variant_id', selectedVariant.id.toString());
+      form.append('amount', amount.toString());
+      const res = await fetch(
+        `/api/order/order.php?action=cart_add`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: form.toString(),
+          credentials: 'include',
+        }
+      );
+      const data = await res.json();
+      if (!data.success) {
+        console.error('Add to cart failed', data);
+      }
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+    } finally {
+      setAdding(false);
+    }
   };
 
   if (loading) {
@@ -80,9 +119,30 @@ export default function Product() {
             />
           </div>
           <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold">{product.name}</h1>
-            <p className="text-lg text-gray-600">{selectedVariant.name}</p>
-            <p className="text-xl font-semibold">${selectedVariant.price}</p>
+            <Typography variant="h4" component="h1">
+              {product.name}
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              {selectedVariant.name}
+            </Typography>
+            <Typography variant="h5">
+              ${selectedVariant.price}
+            </Typography>
+
+            {/* Amount controls without icons */}
+            <div className="flex items-center space-x-2">
+              <Button size="small" onClick={() => adjustAmount(-1)} disabled={userCore?.is_admin || !userCore}>-</Button>
+              <Typography>{amount}</Typography>
+              <Button size="small" onClick={() => adjustAmount(1)} disabled={userCore?.is_admin || !userCore}>+</Button>
+            </div>
+
+            <Button
+              variant="contained"
+              onClick={handleAddToCart}
+              disabled={adding || userCore?.is_admin || !userCore}
+            >
+              {adding ? 'Adding...' : 'Add to Cart'}
+            </Button>
 
             <Tabs
               value={tabValue}
@@ -100,9 +160,11 @@ export default function Product() {
         </CardContent>
       </Card>
 
-      <div className="mt-6 p-4 bg-white rounded-xl shadow-md lg:max-w-5xl w-full mx-auto">
-        <h2 className="text-xl font-semibold mb-2">Product Description</h2>
-        <p className="text-gray-700 text-base">{product.description}</p>
+      <div className="mt-6 p-4 bg-white rounded-xl shadow-md lg:max-w-5xl w-full mx-auto text-black">
+        <Typography variant="h6" gutterBottom>
+          Product Description
+        </Typography>
+        <Typography>{product.description}</Typography>
       </div>
     </div>
   );
